@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f6fb">
+  <meta name="description" content="Play Strata Chess, an eight-layer chess variant. Clear eight opposing armies with one king and 64 pawns.">
+  <title>Strata Chess</title>
+  <link rel="icon" type="image/png" href="./pieces/player-k.png">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./viewport.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <div class="wordmark" aria-label="Strata Chess">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span>STRATA<span class="wordmark-chess"> CHESS</span></span>
+      </div>
+      <nav class="header-actions" aria-label="Game controls">
+        <button class="button button-outline" id="rules-button" type="button"><span class="question-icon" aria-hidden="true">?</span><span>How to play</span></button>
+        <button class="button button-primary" id="new-button" type="button"><span class="plus-icon" aria-hidden="true"></span><span>New game</span></button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <div class="page-header">
+      <div>
+        <p class="eyebrow"><span></span> 8 × 8 × 8 CHESS</p>
+        <h1>Strata Chess<span class="title-period">.</span></h1>
+        <p class="subtitle">One king. 64 pawns. Eight opposing armies.</p>
+      </div>
+      <section class="capture-card" aria-label="Campaign progress">
+        <span class="capture-icon"><img src="./pieces/player-k.png" alt=""></span>
+        <div class="capture-body">
+          <div class="capture-top"><span>LAYERS CLEARED</span><strong><span id="capture-count">0</span><span class="capture-total"> / 8</span></strong></div>
+          <div class="capture-progress" id="capture-progress" role="progressbar" aria-label="Layers cleared" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        </div>
+      </section>
+    </div>
+
+    <div class="game-layout">
+      <section class="card board-card" aria-labelledby="layer-heading">
+        <header class="board-header">
+          <div class="board-heading">
+            <h2 id="layer-heading"><span id="volume-heading-main">All layers</span><span id="layer-heading-title" hidden>Layer <span id="view-layer">5</span></span></h2>
+            <span class="layer-badge" id="layer-badge" hidden><span aria-hidden="true"></span>Your king</span>
+          </div>
+          <div class="board-actions">
+            <div class="layer-arrows" id="layer-arrows" role="group" aria-label="Cycle through layers" hidden>
+              <button class="icon-button" id="previous-layer" type="button" aria-label="Previous layer" title="Previous layer"><i class="chevron chevron-left"></i></button>
+              <button class="icon-button" id="next-layer" type="button" aria-label="Next layer" title="Next layer"><i class="chevron"></i></button>
+            </div>
+            <div class="view-switch" role="group" aria-label="Board view">
+              <button id="view-3d" type="button" aria-pressed="true" aria-controls="viewport" aria-label="3D view">3D</button>
+              <button id="view-2d" type="button" aria-pressed="false" aria-controls="board-area" aria-label="2D layer view">2D</button>
+            </div>
+          </div>
+        </header>
+        <div id="viewport"></div>
+        <div class="board-area" id="board-area" hidden>
+          <nav class="layer-rail" aria-label="Chess layers">
+            <span class="rail-label">LAYER</span>
+            <div class="layer-buttons" id="layer-buttons"></div>
+          </nav>
+          <div class="board-region">
+            <div class="ranks" aria-hidden="true"><span>8</span><span>7</span><span>6</span><span>5</span><span>4</span><span>3</span><span>2</span><span>1</span></div>
+            <div id="board" class="board" role="group" aria-label="Layer 5 chessboard"></div>
+            <div class="files" aria-hidden="true"><span>a</span><span>b</span><span>c</span><span>d</span><span>e</span><span>f</span><span>g</span><span>h</span></div>
+          </div>
+        </div>
+        <footer class="board-footer">
+          <span class="board-hint" id="board-hint">Select a piece to see its legal moves.</span>
+          <span class="threat-key" id="threat-key" hidden><i aria-hidden="true"></i> Cross-layer attack</span>
+          <span class="shortcut" id="layer-shortcut" hidden><kbd>1–8</kbd> Switch layer</span>
+        </footer>
+      </section>
+
+      <aside class="sidebar" aria-label="Game overview">
+        <section class="card volume-card" id="volume-card" aria-labelledby="volume-heading" hidden>
+          <header class="side-header"><h2 id="volume-heading">Volume overview</h2></header>
+          <div class="volume-surface"><canvas id="volume" aria-label="Eight stacked chess layers. Select a layer using the layer buttons."></canvas></div>
+          <div class="volume-legend">
+            <span><i class="legend-view"></i> Viewing layer</span>
+            <span><i class="legend-king"></i> King's layer</span>
+          </div>
+        </section>
+        <section class="card status-card" aria-labelledby="turn-heading">
+          <header class="side-header turn-header">
+            <h2 id="turn-heading"><span class="turn-indicator" id="turn-indicator"></span><span id="turn-title">Your turn</span></h2>
+            <span class="turn-number" id="turn-number">TURN 01</span>
+          </header>
+          <p id="turn-message" class="turn-message" role="status" aria-live="polite">Capture opposing kings and exhaust their pawns.</p>
+          <div class="engine-line">
+            <span class="engine-icon" aria-hidden="true"><i></i></span>
+            <span id="engine-label">King’s layer</span><strong id="engine-value">Stockfish</strong>
+          </div>
+          <p class="cross-threat-message" id="cross-threat-message" hidden></p>
+          <button class="voodoo-tracker" id="voodoo-tracker" type="button" hidden>
+            <span class="voodoo-icon"><img src="./pieces/player-v.png" alt=""></span>
+            <span class="voodoo-details"><strong>Voodoo Knight</strong><small id="voodoo-location"></small></span>
+            <span class="voodoo-countdown" id="voodoo-countdown"></span>
+          </button>
+        </section>
+        <section class="card log-card" aria-labelledby="log-heading">
+          <header class="side-header log-header"><h2 id="log-heading">Move log</h2><span id="log-count" class="log-count">0</span></header>
+          <div id="move-log" class="move-log"><p class="log-empty">Moves will appear here as you play.</p></div>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <dialog id="rules-dialog" class="dialog">
+    <div class="dialog-frame">
+      <header class="dialog-header"><h2>How to play</h2><button class="icon-button close-dialog" type="button" aria-label="Close rules">×</button></header>
+      <div class="dialog-body rules-body">
+        <p>You start with a king on <strong>e1, layer 5</strong> and 64 pawns. Eight pawns fill <strong>a2 through h2</strong> on each layer. Each layer starts with a full opposing army.</p>
+        <h3>Taking a turn</h3>
+        <p>In 3D, select a piece to highlight its legal destinations across all eight layers. Tilt or zoom the camera to get a clear view, then select a destination to move. In 2D, change layers with the numbered buttons, the cube, or the <kbd>1</kbd>–<kbd>8</kbd> keys. Your selection stays active when you change views or layers.</p>
+        <p>After your move, the armies on your king’s layer and your piece’s destination layer reply together. A Voodoo Knight hop also activates the army on its destination layer. Stockfish plays on your king’s layer, and a tactical bot plays on the other active layers. Each army stays on its layer and normally makes one reply.</p>
+        <h3>Cross-layer attacks</h3>
+        <p>Amber markers show squares your pieces attack from another layer. Sliding attacks extend through kings. Sliding pieces need a clear path to move.</p>
+        <p>A cross-layer check activates the threatened army on any layer. If a safe king move exists, the king takes it. The army can make extra moves to open and use a safe escape in the same turn. If no escape opens, the king stays in check.</p>
+        <h3>Your pieces</h3>
+        <dl class="piece-rules">
+          <div><dt><img src="./pieces/player-k.png" alt="">King</dt><dd>Moves to any of the 26 adjacent cells.</dd></div>
+          <div><dt><img src="./pieces/player-p.png" alt="">Pawn</dt><dd>Advances one rank, or two on its first move if clear. Captures one rank forward with a one-cell shift in file, layer, or both. En passant follows the same geometry after an enemy double step. Promote on rank 8.</dd></div>
+          <div><dt><img src="./pieces/player-n.png" alt="">Knight</dt><dd>Jumps two cells along one axis and one along a perpendicular axis.</dd></div>
+          <div><dt><img src="./pieces/player-b.png" alt="">Bishop</dt><dd>Slides along two-axis diagonals in any plane.</dd></div>
+          <div><dt><img src="./pieces/player-r.png" alt="">Rook</dt><dd>Slides straight up or down through layers.</dd></div>
+          <div><dt><img src="./pieces/player-t.png" alt="">Trishop</dt><dd>Slides along three-axis space diagonals.</dd></div>
+          <div><dt><img src="./pieces/player-q.png" alt="">Queen</dt><dd>Slides along a rank or file, straight up or down through layers, or along any two-axis diagonal.</dd></div>
+        </dl>
+        <h3>Voodoo Knight</h3>
+        <p>The first opposing army reduced to its king and one other piece starts a 10-player-turn countdown. When the countdown ends or that army is stalemated or checkmated, the Voodoo Knight spawns on an empty square outside enemy attack on that layer. If there is no safe square, it waits on standby for the same layer and tries again after the board changes.</p>
+        <p>The Knight waits one player turn per remaining opposing army between hop attempts. For example, with five armies left, it tries to hop every five turns. At each scheduled hop, the Knight randomly chooses a safe 3D knight move before the bots reply. It can capture an undefended piece if its landing square is safe after the capture and any pawn succession. If there is no safe move, it stays put until the next scheduled hop. Your king perishes if the Voodoo Knight is captured.</p>
+        <h3>Winning and losing</h3>
+        <p>Clear all eight layers to win. Each time you capture a king, an unpromoted pawn on that layer is crowned if one remains. Safe pawns are chosen first. Capturing a king with no pawns left clears the layer.</p>
+        <p>You lose if your king is in check and every move, including escapes across layers, leaves it in check.</p>
+        <p class="art-credit"><a href="./pieces/ATTRIBUTION.txt" target="_blank" rel="noopener">Chess piece artwork credits</a> · <a href="./vendor/stockfish-source.txt" target="_blank" rel="noopener">Stockfish source and license</a></p>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="new-dialog" class="dialog dialog-compact">
+    <div class="dialog-frame">
+      <header class="dialog-header"><h2>Start a new game?</h2><button class="icon-button close-dialog" type="button" aria-label="Close">×</button></header>
+      <div class="dialog-body"><p>Your current game and move log will be reset.</p></div>
+      <footer class="dialog-actions"><button class="button button-outline close-dialog" type="button">Cancel</button><button class="button button-primary" id="confirm-new" type="button">New game</button></footer>
+    </div>
+  </dialog>
+
+  <dialog id="promotion-dialog" class="dialog dialog-compact">
+    <div class="dialog-frame">
+      <header class="dialog-header"><h2>Promote pawn</h2><button class="icon-button close-dialog" type="button" aria-label="Cancel promotion">×</button></header>
+      <div class="dialog-body"><p>Choose your new piece.</p><div id="promotion-options" class="promotion-options"></div></div>
+    </div>
+  </dialog>
+
+  <span id="announcement" class="sr-only" aria-live="polite"></span>
+</body>
+</html>

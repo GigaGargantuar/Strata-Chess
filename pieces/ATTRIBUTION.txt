@@ -1,0 +1,10 @@
+Classic chess piece artwork by Colin M. L. Burnett (Cburnett).
+Licensed under Creative Commons Attribution-ShareAlike 3.0 Unported.
+https://creativecommons.org/licenses/by-sa/3.0/
+
+Original artwork: https://commons.wikimedia.org/wiki/Category:SVG_chess_pieces/Standard_transparent
+Source SVGs: https://github.com/lichess-org/lila/tree/master/public/piece/cburnett
+The classic pieces were recolored and rasterized for Strata Chess and remain under the same license.
+The Voodoo Knight adapts Cburnett's white knight with a violet colorway and additional markings and is licensed under CC BY-SA 3.0.
+
+The trishop icon is original artwork created for Strata Chess.

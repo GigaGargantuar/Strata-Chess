@@ -1,0 +1,243 @@
+.viewport-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 12px;
+  padding: 14px 12px 0;
+}
+
+.viewport-control-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid #e4e7f2;
+  border-radius: 9px;
+  background: #f5f6fc;
+}
+
+.viewport-control {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid #e2e5f2;
+  border-radius: 6px;
+  background: #fff;
+  color: #465177;
+  font: 700 17px/1 var(--heading);
+}
+
+.viewport-control:hover:not(:disabled) {
+  border-color: #cdd0f5;
+  background: #efefff;
+  color: var(--accent-strong);
+}
+
+.viewport-control:disabled {
+  opacity: .47;
+}
+
+.viewport-fit {
+  width: auto;
+  padding-inline: 9px;
+  font-size: 12px;
+}
+
+.viewport-help {
+  margin: 7px 12px 10px;
+  color: var(--muted);
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.viewport-stage {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  height: clamp(605px, 82vh, 750px);
+  margin: 0 17px 17px;
+  border: 1px solid #dce3fa;
+  border-radius: 9px;
+  background: radial-gradient(ellipse at 46% 48%, #fcfdff 3%, #eef1ff 76%);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.viewport-stage.is-dragging,
+.viewport-stage.is-dragging :is(.viewport-square, .viewport-marker) {
+  cursor: grabbing;
+}
+
+.viewport-guide,
+.viewport-plane,
+.viewport-markers,
+.viewport-marker,
+.viewport-layer-label {
+  position: absolute;
+  inset: 0 auto auto 0;
+}
+
+.viewport-guide {
+  border-left: 1px dashed #98a6d088;
+  pointer-events: none;
+}
+
+.viewport-plane {
+  display: grid;
+  grid-template-columns: repeat(8, 28px);
+  grid-template-rows: repeat(8, 28px);
+  transform-origin: top left;
+  box-shadow: 0 0 0 1px #8998c2, 3px 4px 0 #9aa9cf6e;
+}
+
+.viewport-plane.is-active {
+  --viewport-dark-square: #9eaee0;
+  box-shadow: 0 0 0 2px #5358d0, 3px 4px 0 #7479ddad;
+}
+
+.viewport-square {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: #f2efe4;
+  cursor: grab;
+}
+
+.viewport-square.is-dark {
+  background: var(--viewport-dark-square, #aebcdb);
+}
+
+.viewport-square.can-select,
+.viewport-square.is-target,
+.viewport-marker {
+  cursor: pointer;
+}
+
+.viewport-square:is(.can-select, .is-target):hover {
+  box-shadow: inset 0 0 0 2px #555abc;
+}
+
+.viewport-square.is-target {
+  background: #d6eaca;
+  box-shadow: inset 0 0 0 2px #298466;
+}
+
+.viewport-square.is-selected {
+  background: #a2a0f8;
+  box-shadow: inset 0 0 0 2px #4246bc;
+}
+
+.viewport-square.is-threat:not(.is-target, .is-selected) {
+  box-shadow: inset 0 0 0 2px #bd792e;
+}
+
+.viewport-square:focus-visible {
+  z-index: 1;
+  outline: 3px solid #3838a7;
+  outline-offset: 1px;
+}
+
+.viewport-markers {
+  z-index: 1;
+  pointer-events: none;
+}
+
+.viewport-marker {
+  --marker-size: var(--viewport-target-size, 8px);
+  display: grid;
+  place-items: center;
+  width: var(--marker-size);
+  height: var(--marker-size);
+  margin: calc(-.5 * var(--marker-size));
+  border-radius: 50%;
+  pointer-events: auto;
+}
+
+.viewport-marker[hidden] {
+  display: none;
+}
+
+.viewport-marker.has-piece {
+  --marker-size: var(--viewport-hit-size, 13px);
+}
+
+.viewport-marker.is-target:not(.has-piece) {
+  border: 1px solid #176951;
+  background: #79c6a5;
+  box-shadow: 0 0 0 1px #ecfff4;
+}
+
+.viewport-marker.is-capture.has-piece,
+.viewport-marker.is-selected {
+  outline: 2px solid #258364;
+  outline-offset: 1px;
+}
+
+.viewport-marker.is-selected {
+  outline-color: #494cc2;
+}
+
+.viewport-marker:is(.has-piece, .is-target):hover {
+  outline: 2px solid #484ac1;
+  outline-offset: 1px;
+}
+
+.viewport-piece {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: var(--viewport-piece-size, 13px);
+  height: var(--viewport-piece-size, 13px);
+  object-fit: contain;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 1px 1px #27376055);
+  pointer-events: none;
+}
+
+.viewport-layer-label {
+  z-index: 2;
+  min-width: 24px;
+  padding: 3px 4px;
+  margin-top: -9px;
+  border: 1px solid #d0d9f0;
+  border-radius: 4px;
+  background: #f8f9ff;
+  color: #536187;
+  text-align: center;
+  font: 700 10px/1 var(--heading);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+.viewport-layer-label.is-active {
+  border-color: #5558d6;
+  background: #5558d6;
+  color: #fff;
+}
+
+.viewport-layer-label.has-target::after {
+  position: absolute;
+  top: calc(50% - 2px);
+  left: -8px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #238265;
+  content: '';
+}
+
+@media (max-width: 690px) {
+  .viewport-stage {
+    height: clamp(545px, 76vh, 665px);
+    margin: 0 10px 10px;
+  }
+
+  .viewport-controls {
+    padding-top: 10px;
+  }
+}

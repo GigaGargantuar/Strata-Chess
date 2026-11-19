@@ -1,0 +1,10 @@
+Stockfish.js 18 Lite, single-threaded WebAssembly
+Copyright 2026 Chess.com, LLC and the Stockfish contributors.
+Distributed under the GNU General Public License, version 3. The license and
+contributor list are included alongside the engine files.
+
+Corresponding source and build scripts for this exact release:
+https://github.com/nmrugg/stockfish.js/tree/v18.0.0
+https://github.com/nmrugg/stockfish.js/archive/refs/tags/v18.0.0.tar.gz
+
+The engine files are unmodified copies from the stockfish 18.0.0 npm release.
